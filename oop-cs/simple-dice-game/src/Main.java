@@ -4,7 +4,7 @@ public class Main {
 
     int numPlayers = 6;
     // Change this to SimpleDiceGameWithRandomness to test
-    SnakeAndLadderGame game = new SnakeAndLadderGame(numPlayers);
+    SimpleDiceGame game = new SimpleDiceGame(numPlayers);
 
     while (true) {
       int currP = game.getNextPlayer();
