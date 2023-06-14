@@ -15,7 +15,7 @@ class consumer {
         }
         T* consume() {
             if (dh->isEmpty()) {
-                cout << "Data holder is empty";
+                cout << "Data holder is empty" << endl;
                 return nullptr;
             }
             T* item = dh->getNextItem();
