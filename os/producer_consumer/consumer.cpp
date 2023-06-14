@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 
 #include "data_holder.cpp"
 
@@ -12,8 +13,12 @@ class consumer {
         consumer(data_holder<T>* dh) {
             this->dh = dh;
         }
-        T consume() {
-            T item = dh->getNextItem();
+        T* consume() {
+            if (dh->isEmpty()) {
+                cout << "Data holder is empty";
+                return nullptr;
+            }
+            T* item = dh->getNextItem();
             dh->deleteNextItem();
             return item;
         }

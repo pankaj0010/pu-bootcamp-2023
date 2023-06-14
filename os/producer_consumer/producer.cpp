@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 
 #include "data_holder.cpp"
 
@@ -13,6 +14,10 @@ class producer {
             this->dh = dh;
         }
         void produce(T item) {
+            if (dh->isFull()) {
+                cout << "Data holder is full" << endl;
+                return;
+            }
             dh->insert(item);
         }
 };

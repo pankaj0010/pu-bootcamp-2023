@@ -29,8 +29,9 @@ class queue_holder : public data_holder<T> {
             q.push(item);
         }
 
-        T getNextItem() {
-            return q.front();
+        T* getNextItem() {
+            T* item = new T(q.front());
+            return item;
         }
 
         void deleteNextItem() {
