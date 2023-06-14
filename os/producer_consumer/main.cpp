@@ -1,14 +1,14 @@
 
 #include <iostream>
-#include <queue>
 
 #include "consumer.cpp"
 #include "producer.cpp"
+#include "queue_holder.cpp"
 
 using namespace std;
 
 int main() {
-    queue<string> pcQueue;
+    queue_holder<string> pcQueue = queue_holder<string>(10);
     producer<string> prod = producer<string>(&pcQueue);
     consumer<string> cons = consumer<string>(&pcQueue);
     

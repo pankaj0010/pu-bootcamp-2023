@@ -1,18 +1,20 @@
 #include <string>
-#include <queue>
+
+#include "data_holder.cpp"
+
 using namespace std;
 
 template <typename T>
 class consumer {
     private:
-        queue<T>* q;
+        data_holder<T>* dh;
     public:
-        consumer(queue<T>* q) {
-            this->q = q;
+        consumer(data_holder<T>* dh) {
+            this->dh = dh;
         }
         T consume() {
-            T item = q->front();
-            q->pop();
+            T item = dh->getNextItem();
+            dh->deleteNextItem();
             return item;
         }
 };

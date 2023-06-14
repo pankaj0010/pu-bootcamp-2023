@@ -1,16 +1,18 @@
 #include <string>
-#include <queue>
+
+#include "data_holder.cpp"
+
 using namespace std;
 
 template <typename T>
 class producer {
     private:
-        queue<T>* q;
+        data_holder<T>* dh;
     public:
-        producer(queue<T>* q) {
-            this->q = q;
+        producer(data_holder<T>* dh) {
+            this->dh = dh;
         }
         void produce(T item) {
-            q->push(item);
+            dh->insert(item);
         }
 };
