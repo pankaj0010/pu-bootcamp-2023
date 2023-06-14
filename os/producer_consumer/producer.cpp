@@ -23,7 +23,7 @@ class producer {
         }
         void produce(T item) {
             unique_lock<mutex> lck(*dh_mu);
-            if (dh->isFull()) {
+            while (dh->isFull()) {
                 full_data_holder->wait(lck);
             }
             dh->insert(item);

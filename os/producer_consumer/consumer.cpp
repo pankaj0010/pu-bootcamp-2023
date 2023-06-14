@@ -23,7 +23,7 @@ class consumer {
         }
         T* consume() {
             unique_lock<mutex> lck(*dh_mu);
-            if (dh->isEmpty()) {
+            while (dh->isEmpty()) {
                 empty_data_holder->wait(lck);
             }
             T* item = dh->getNextItem();
