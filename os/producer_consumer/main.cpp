@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <thread>
+#include <mutex>
 
 #include "consumer.cpp"
 #include "producer.cpp"
@@ -8,18 +9,18 @@
 
 using namespace std;
 
-void producer_thread_fn(queue_holder<string>* pcQueue, int holder_size) {
-    producer<string> prod = producer<string>(pcQueue);
+void producer_thread_fn(queue_holder<int>* pcQueue, mutex* dh_mu, int holder_size) {
+    producer<int> prod = producer<int>(pcQueue, dh_mu);
     for (int i = 0; i < holder_size + 5; i++) {
-        cout << "Producing hello" << i << endl;
-        prod.produce("hello" + i);
+        cout << "Producing " << i << endl;
+        prod.produce(i);
     }
 }
 
-void consumer_thread_fn(queue_holder<string>* pcQueue, int holder_size) {
-    consumer<string> cons = consumer<string>(pcQueue);
+void consumer_thread_fn(queue_holder<int>* pcQueue, mutex* dh_mu, int holder_size) {
+    consumer<int> cons = consumer<int>(pcQueue, dh_mu);
     for (int i = 0; i <= holder_size; i++) {
-        string* consumed_val = cons.consume();
+        int* consumed_val = cons.consume();
         if (consumed_val != nullptr) {
             cout << "Consumed " << *consumed_val << " in thread " << this_thread::get_id() << endl;
         }
@@ -28,10 +29,11 @@ void consumer_thread_fn(queue_holder<string>* pcQueue, int holder_size) {
 
 int main() {
     int holder_size = 10;
-    queue_holder<string> pcQueue = queue_holder<string>(holder_size);
-    thread prod_thread(producer_thread_fn, &pcQueue, holder_size);
-    thread cons_thread_1(consumer_thread_fn, &pcQueue, holder_size);
-    thread cons_thread_2(consumer_thread_fn, &pcQueue, holder_size);
+    queue_holder<int> pcQueue = queue_holder<int>(holder_size);
+    mutex dh_mu;
+    thread prod_thread(producer_thread_fn, &pcQueue, &dh_mu, holder_size);
+    thread cons_thread_1(consumer_thread_fn, &pcQueue, &dh_mu, holder_size);
+    thread cons_thread_2(consumer_thread_fn, &pcQueue, &dh_mu, holder_size);
     prod_thread.join();
     cons_thread_1.join();
     cons_thread_2.join();
