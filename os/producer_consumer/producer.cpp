@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <mutex>
+#include <condition_variable>
 
 #include "data_holder.cpp"
 
@@ -11,19 +12,21 @@ class producer {
     private:
         data_holder<T>* dh;
         mutex* dh_mu;
+        condition_variable* full_data_holder;
+        condition_variable* empty_data_holder;
     public:
-        producer(data_holder<T>* dh, mutex* dh_mu) {
+        producer(data_holder<T>* dh, mutex* dh_mu, condition_variable* full_data_holder, condition_variable* empty_data_holder) {
             this->dh = dh;
             this->dh_mu = dh_mu;
+            this->full_data_holder = full_data_holder;
+            this->empty_data_holder = empty_data_holder;
         }
         void produce(T item) {
-            dh_mu->lock();
+            unique_lock<mutex> lck(*dh_mu);
             if (dh->isFull()) {
-                cout << "Data holder is full" << endl;
-                dh_mu->unlock();
-                return;
+                full_data_holder->wait(lck);
             }
             dh->insert(item);
-            dh_mu->unlock();
+            empty_data_holder->notify_all();
         }
 };
